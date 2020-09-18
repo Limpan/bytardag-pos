@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bytardag POS{% endblock %}</title>
+
+    <link href="{{ url_for('static', filename='css/lib/normalize.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Raleway&display=swap" rel="stylesheet">
+</head>
+<body>
+<noscript>
+<p>Här behövs JavaScript.</p>
+</noscript>
+
+<div class="container">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="section">
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% block content %}
+{% endblock %}
+</div>
+
+{% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('sv-SE') }}
+{% endblock %}
+</body>
+</html>

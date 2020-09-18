@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="section">
+        <h1>Bytardag POS</h1>
+
+        <p>Här kan du registrera kvittorader från de ark som klistrats i kassan.</p>
+
+        <p>
+        {% if open_sheet %}
+            Du har ett ark som inte är avslutat, <a href="{{ url_for('main.entry', id=open_sheet.id) }}">gör klart det här</a>.
+        {% else %}
+            <a href="{{ url_for('main.start_sheet') }}">Skapa nytt ark och registrera kvittorader.</a>
+        {% endif %}
+        </p>
+
+        <p>
+            Du kan också hjälpa till och <a href="{{ url_for('main.verify') }}">kontrollera inmatade ark</a>.
+        </p>
+    </div>
+{% endblock %}

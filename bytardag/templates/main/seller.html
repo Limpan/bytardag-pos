@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Säljare {{ seller_id }}</h1>
+    <p>
+        Att betala till säljare: {{ (stats[0] * 0.75)|round(2) }} kr<br>
+        Total summa kvitton: {{ stats[0] }} kr<br>
+    </p>
+    <table class="cr1 cr2 cc3">
+        <thead>
+            <tr>
+                <th>Belopp</th>
+                <th>Ark</th>
+                <th>Tid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.amount }}kr</td>
+                <td>{{ row.sheet.id }}</td>
+                <td>{{ moment(row.timestamp).format('LLL') }}</td>            
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

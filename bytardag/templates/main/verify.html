@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="section">
+        <h1>Kontrollera ark</h1>
+
+        {% if sheets %}
+        <p>Välj det ark du vill kontrollera.</p>
+        <ul class="listing">
+            {% for sheet in sheets %}
+                <li><a href="{{ url_for('main.verify_entry', id=sheet.id) }}">Ark #{{ sheet.id }}</a></li>
+            {% endfor %}
+        {% else %}
+            <p>Det verkar inte finnas några ark som behöver kontrolleras.</p>        
+        {% endif %}
+    </div>
+{% endblock %}

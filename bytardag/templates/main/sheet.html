@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Ark {{ sheet.id }}</h1>
+    <p>
+        Skapat av<br>
+        Kontrollerat av
+    </p>
+    <table class="cc1 cr2 cc3">
+        <thead>
+            <tr>
+                <th>Sälj-ID</th>
+                <th>Belopp</th>
+                <th>Tid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in sheet.rows %}
+            <tr>
+                <td>{{ row.seller }}</td>
+                <td>{{ row.amount }} kr</td>
+                <td>{{ moment(row.timestamp).format('LLL') }})</td>            
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

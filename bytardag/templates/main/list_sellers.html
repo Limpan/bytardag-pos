@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Säljare</h1>
+
+    <ul>
+        {% for seller in sellers %}
+        <li><a href="{{ url_for('main.seller', id=seller[0]) }}">{{ seller[0] }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

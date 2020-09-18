@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <canvas id="chart"></canvas>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/Chart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/status.js') }}"></script>
+{% endblock %}

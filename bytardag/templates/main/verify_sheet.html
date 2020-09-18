@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_row %}
+
+{% block content %}
+    <div class="section">
+        <h1>Kontroll - ark #{{ sheet.id }}</h1>
+        <p>
+            Följande kvittorader finns registrerade för arket. Markera de rader du ser på arket och klicka sedan på verifiera för att markera arket som godkänt.
+        </p>
+    </div>
+
+    <ul class="listing">
+        {% for row in sheet.rows %}
+            <li><div class="row-verify">{{ render_row(row.seller, row.amount) }}</div></li>
+        {% endfor %}
+    </ul>
+
+    <form id="verify" action="" method="POST">
+        {{ form.csrf_token }}
+        <ul>
+            <li>
+                {{ form.missing(class="warning") }}
+            </li>
+            <li>
+                {{ form.submit(disabled="disabled") }}
+            </li>
+        </ul>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/verify_sheet.js') }}" type="module"></script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_row %}
+
+{% block content %}
+    <div class="section">
+        <p>
+            Du matar in kvittorader för ark #{{ sheet.id }}. Se till att detta ark är märkt med <span class="mark">#{{ sheet.id }}</span>!
+        </p>
+    </div>
+    <form id="register" action="" method="POST">
+        {{ form.csrf_token }}
+        <ul>
+            <li>
+                {{ form.seller.label }}
+                <div class="seller-ac">
+                    {{ form.seller(pattern="[a-zA-Z]-[0-9]{2}", autocomplete="off") }}
+                    <div id="suggestions">
+                    </div>
+                </div>
+            </li>
+            <li>
+                {{ form.amount.label }}
+                {{ form.amount(pattern="[0-9]+", autocomplete="off") }}
+            </li>
+            <li>
+                {{ form.submit() }}
+            </li>
+        </ul>
+    </form>
+
+    <ul id="history" class="listing">
+    {% for item in sheet.rows|reverse %}
+        <li>{{ render_row(item.seller, item.amount) }}</li>
+    {% endfor %}
+    </ul>
+
+    <div class="section">
+        <label for="close"><p>Kontrollera att du har <span id="num-rows">{{ num_rows }}</span> kvittorader på arket innan du stänger det!</p></label>
+        <button onclick="window.location.href='{{ url_for('main.close_sheet', id=sheet.id) }}'" id="close" name="close" class="warning">Stäng ark</button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/entry.js') }}" type="module"></script>
+{% endblock %}
