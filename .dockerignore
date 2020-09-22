@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.python-version
+env/
+dist/
+downloads/
+*.egg-info/
+
+# Unit test / coverage reports
+.nox/
+.coverage
+.pytest_cache
+
+# Development db
+app.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Visual Studio Code
+.vscode

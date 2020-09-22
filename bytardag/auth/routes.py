@@ -3,12 +3,12 @@ from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 
 from bytardag import db
-from bytardag.auth import blueprint
+from bytardag.auth import bp
 from bytardag.auth.forms import LoginForm
 from bytardag.models import User
 
 
-@blueprint.route("/login", methods=["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
@@ -26,7 +26,7 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
-@blueprint.route("/logout")
+@bp.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for("main.index"))

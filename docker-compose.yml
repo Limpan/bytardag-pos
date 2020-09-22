@@ -1,0 +1,27 @@
+version: '3'
+services:
+    web:
+        restart: always
+        image: etnolit/bytardag_pos:0.1
+        ports: 
+            - "8001:8000"
+        links:
+            - db
+        environment:
+            - SENTRY_DSN=${SENTRY_DSN}
+            - SERVER_NAME=${SERVER_NAME}
+            - SECRET_KEY=${SECRET_KEY}
+            - DATABASE_URI=postgresql+psycopg2://postgres:${DB_PASSWORD}@db/postgres
+    db:
+        restart: always
+        image: postgres:12.4
+        expose:
+            - "5432"
+        volumes:
+            - dbdata:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+
+volumes:
+    dbdata:
+        driver: local

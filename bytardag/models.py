@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    last_seen = db.Column(db.DateTime, default=pendulum.now)
     sheets = db.relationship(
         "Sheet", foreign_keys="Sheet.owned_by", backref="owner", lazy="dynamic"
     )

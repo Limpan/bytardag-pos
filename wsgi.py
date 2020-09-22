@@ -1,4 +1,3 @@
-from bytardag import cli, create_app
+import bytardag
 
-app = create_app()
-cli.register(app)
+app = bytardag.create_app()

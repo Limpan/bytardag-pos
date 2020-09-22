@@ -4,6 +4,8 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 __version__ = "0.1.0"
 
@@ -19,18 +21,28 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    sentry_sdk.init(
+        dsn=app.config["SENTRY_DSN"],
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=1.0,
+    )
+
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
     moment.init_app(app)
 
-    from bytardag.main import blueprint as main_blueprint
+    from bytardag.main import bp as main_bp
 
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(main_bp)
 
-    from bytardag.auth import blueprint as auth_blueprint
+    from bytardag.auth import bp as auth_bp
 
-    app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(auth_bp, url_prefix="/auth")
+
+    from bytardag.user import bp as user_bp
+
+    app.register_blueprint(user_bp, url_prefix="/user")
 
     return app
 

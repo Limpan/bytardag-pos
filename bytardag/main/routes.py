@@ -15,12 +15,19 @@ from sqlalchemy import func
 from werkzeug.datastructures import MultiDict
 
 from bytardag import db
-from bytardag.main import blueprint
+from bytardag.main import bp
 from bytardag.main.forms import RegisterForm, VerifyForm
 from bytardag.models import Row, Sheet
 
 
-@blueprint.route("/")
+@bp.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = pendulum.now()
+        db.session.commit()
+
+
+@bp.route("/")
 @login_required
 def index():
     num_sheets = db.session.query(Sheet).count()
@@ -55,7 +62,7 @@ def index():
     )
 
 
-@blueprint.route("/entry/<int:id>", methods=["GET", "POST"])
+@bp.route("/entry/<int:id>", methods=["GET", "POST"])
 @login_required
 def entry(id):
     if request.is_json:
@@ -98,7 +105,7 @@ def entry(id):
     return render_template("main/entry.html", form=form, sheet=sheet, num_rows=num_rows)
 
 
-@blueprint.route("/verify")
+@bp.route("/verify")
 @login_required
 def verify():
     sheets = (
@@ -110,7 +117,7 @@ def verify():
     return render_template("main/verify.html", sheets=sheets)
 
 
-@blueprint.route("/entry/<int:id>/verify", methods=["GET", "POST"])
+@bp.route("/entry/<int:id>/verify", methods=["GET", "POST"])
 @login_required
 def verify_entry(id):
     sheet = db.session.query(Sheet).get_or_404(id)
@@ -140,7 +147,7 @@ def verify_entry(id):
     return render_template("main/verify_sheet.html", form=form, sheet=sheet)
 
 
-@blueprint.route("/entry/<int:id>/close")
+@bp.route("/entry/<int:id>/close")
 @login_required
 def close_sheet(id):
     sheet = db.session.query(Sheet).filter_by(id=id).first()
@@ -158,7 +165,7 @@ def close_sheet(id):
     return redirect(url_for("main.index"))
 
 
-@blueprint.route("/start_sheet")
+@bp.route("/start_sheet")
 @login_required
 def start_sheet():
     # Check for open sheet for user.
@@ -169,21 +176,21 @@ def start_sheet():
     return redirect(url_for("main.entry", id=sheet.id))
 
 
-@blueprint.route("/sheet/<int:id>")
+@bp.route("/sheet/<int:id>")
 @login_required
 def sheet(id):
     sheet = db.session.query(Sheet).filter_by(id=id).first_or_404()
     return render_template("main/sheet.html", sheet=sheet)
 
 
-@blueprint.route("/sheet")
+@bp.route("/sheet")
 @login_required
 def sheets():
     sheets = db.session.query(Sheet).all()
     return render_template("main/sheets.html", sheets=sheets)
 
 
-@blueprint.route("/seller")
+@bp.route("/seller")
 @login_required
 def list_sellers():
     sellers = db.session.query(Row.seller).distinct().order_by(Row.seller.asc()).all()
@@ -191,7 +198,7 @@ def list_sellers():
     return render_template("main/list_sellers.html", sellers=sellers)
 
 
-@blueprint.route("/seller/<id>")
+@bp.route("/seller/<id>")
 @login_required
 def seller(id):
     rows = db.session.query(Row).filter_by(seller=id.upper()).all()
@@ -202,7 +209,7 @@ def seller(id):
     )
 
 
-@blueprint.route("/status")
+@bp.route("/status")
 def status():
     if request.is_json:
         data = {"status": "ok"}

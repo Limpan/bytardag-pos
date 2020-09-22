@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="section">
+        <p>
+            Skapa användare
+        </p>
+
+        <form id="create" action="" method="POST">
+        {{ form.csrf_token }}
+        <ul>
+            <li>
+                {{ form.username.label }}
+                {{ form.username() }}
+            </li>
+            <li>
+                {{ form.password.label }}
+                {{ form.password() }}
+            </li>
+            <li>
+                {{ form.submit() }}
+            </li>
+        </ul>
+    </form>
+{% endblock %}
