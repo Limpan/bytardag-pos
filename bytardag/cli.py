@@ -9,7 +9,7 @@ def register(app):
 
     @user.command()
     @click.argument("username")
-    @click.argument("password", prompt=True)
+    @click.argument("password")
     def add(username, password):
         """Add an user."""
         from bytardag.models import User

@@ -5,7 +5,7 @@ import nox
 
 nox.options.sessions = "lint", "safety", "tests"
 
-locations = "bytardag", "tests", "noxfile.py"
+locations = "bytardag", "tests", "noxfile.py", "wsgi.py"
 
 
 def install_with_constraints(session, *args, **kwargs):
