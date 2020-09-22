@@ -8,16 +8,17 @@ def register(app):
         pass
 
     @user.command()
-    def add():
+    @click.argument("username")
+    @click.argument("password", prompt=True)
+    def add(username, password):
         """Add an user."""
         from bytardag.models import User
         from bytardag import db
 
-        user = User(username="test1")
-        user.password = "qwerty"
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
-        click.echo("Created user")
+        click.echo("Created user {}".format(username))
 
     @app.cli.group()
     def sid():
