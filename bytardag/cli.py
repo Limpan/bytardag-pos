@@ -15,7 +15,8 @@ def register(app):
         from bytardag.models import User
         from bytardag import db
 
-        user = User(username=username, password=password)
+        user = User(username=username)
+        user.password=password
         db.session.add(user)
         db.session.commit()
         click.echo("Created user {}".format(username))
