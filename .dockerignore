@@ -4,9 +4,8 @@ __pycache__/
 
 # Distribution / packaging
 .python-version
-env/
+.env
 dist/
-downloads/
 *.egg-info/
 
 # Unit test / coverage reports
