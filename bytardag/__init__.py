@@ -1,3 +1,5 @@
+import logging
+
 from config import Config
 from flask import Flask
 from flask_login import LoginManager
@@ -17,9 +19,9 @@ login.login_message = "Logga in för att visa denna sida."
 moment = Moment()
 
 
-def create_app():
+def create_app(config=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config)
 
     sentry_sdk.init(
         dsn=app.config["SENTRY_DSN"],
@@ -43,6 +45,12 @@ def create_app():
     from bytardag.user import bp as user_bp
 
     app.register_blueprint(user_bp, url_prefix="/user")
+
+    if not app.debug and not app.testing:
+        # Log to STDOUT
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        app.logger.addHandler(stream_handler)
 
     return app
 

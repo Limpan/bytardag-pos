@@ -6,7 +6,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 
 class Config(object):
-    SENTRY_DSN = os.environ.get('SENTRY_SDN')
+    SENTRY_DSN = os.environ.get('SENTRY_DSN')
 
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'this-is-so-secret-you-will-never-guess'
 
