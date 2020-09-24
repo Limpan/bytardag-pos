@@ -5,11 +5,47 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from bytardag import db, login
 
 
+class Permission:
+    REGISTER_SHEETS = 0x01
+    ADMINISTER = 0x80
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True)
+    default = db.Column(db.Boolean, default=False, index=True)
+    permissions = db.Column(db.Integer)
+    users = db.relationship("User", backref="role", lazy="dynamic")
+
+    @staticmethod
+    def insert_roles():
+        """Method for setting roles for user accounts if they are missing.
+        Teacher-permissions is default.
+        """
+        roles = {
+            "Volunteer": (Permission.REGISTER_SHEETS, True),
+            "Administrator": (0xFF, False),
+        }
+
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
+
+    def __repr__(self):
+        return "<Role {}>".format(self.name)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     last_seen = db.Column(db.DateTime, default=pendulum.now)
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"))
     sheets = db.relationship(
         "Sheet", foreign_keys="Sheet.owned_by", backref="owner", lazy="dynamic"
     )

@@ -4,6 +4,7 @@ from config import Config
 import pytest
 
 from bytardag import create_app, db as _db
+from bytardag.models import Role
 
 
 class TestConfig(Config):
@@ -25,6 +26,7 @@ def db(app, request):
     _db.create_all()
     _db.session.commit()
     # Add additional initialization code here...
+    Role.insert_roles()
 
     def teardown():
         _db.session.remove()

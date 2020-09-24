@@ -9,36 +9,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setupChart();
     setInterval(updateChart, 120000);
+    updateChart();
 });
 
 function setupChart() {
     chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Registrerade', 'Verifierade'],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                label: 'Antal ark',
+                data: [0, 0],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    'rgba(62, 209, 175, 0.5)',
+                    'rgba(224, 174, 18, 0.5)'
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    'rgba(62, 209, 175, 1)',
+                    'rgba(224, 174, 18, 1)'
                 ],
-                borderWidth: 1
+                borderWidth: 3
             }]
         },
         options: {
+            aspectRatio: 3/2,
+            maintainAspectRatio: true,
+            title: {
+                display: true,
+                text: "Antal ark"
+            },
+            legend: {
+                display: false
+            },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -60,6 +62,8 @@ function updateChart() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
+        chart.data.datasets[0].data = data.values;
+        chart.update();
     })
     .catch((error) => {
       console.error('Error:', error);

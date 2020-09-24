@@ -220,7 +220,11 @@ def seller(id):
 @bp.route("/status")
 def status():
     if request.is_json:
-        data = {"status": "ok"}
+        num_sheets = db.session.query(Sheet).count()
+        num_verified_sheets = db.session.query(Sheet).filter(Sheet.signed_at != None).count()
+
+        data = {"status": "ok", "values": [14, 3]}
+#        data = {"status": "ok", "values": [num_sheets, num_verified_sheets]}
         return jsonify(data)
 
     return render_template("main/status.html")
