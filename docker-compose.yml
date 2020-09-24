@@ -2,15 +2,15 @@ version: '2'
 services:
     web:
         restart: always
-        image: etnolit/bytardag_pos:0.1
+        build: .
         ports: 
             - "8001:8000"
         links:
             - db
         environment:
-            - SENTRY_DSN=${SENTRY_DSN}
-            - SERVER_NAME=${SERVER_NAME}
-            - SECRET_KEY=${SECRET_KEY}
+            - SENTRY_DSN
+            - SERVER_NAME
+            - SECRET_KEY
             - DATABASE_URI=postgresql+psycopg2://postgres:${DB_PASSWORD}@db/postgres
     db:
         restart: always

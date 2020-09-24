@@ -52,7 +52,7 @@ def create_app(config=Config):
         stream_handler.setLevel(logging.INFO)
         app.logger.addHandler(stream_handler)
         app.logger.setLevel(logging.INFO)
-    
+
     app.logger.info("Bytardag POS startup.")
 
     return app

@@ -74,12 +74,20 @@ def entry(id):
             sheet.rows.append(row)
             db.session.add(row)
             db.session.commit()
-            num_rows = db.session.query(Row).filter(Row.sheet_id.is_(sheet.id)).count()
+            current_app.logger.info(
+                "Added row #{} for sheet #{}".format(row.id, sheet.id)
+            )
+            num_rows = (
+                db.session.query(Row)
+                .outerjoin(Sheet.rows)
+                .filter(Sheet.id == 1)
+                .count()
+            )
             data = {
                 "status": "ok",
                 "added_value": {"seller": row.seller, "amount": row.amount},
                 "rendered_string": render_template_string(
-                    '{% from "macros.html" import render_row %}{{ render_row(seller, amount)|safe }}',
+                    '{% from "macros.html" import render_row %}{{ render_row(seller, amount)|safe }}',  # noqa: B950
                     seller=row.seller,
                     amount=row.amount,
                 ),
@@ -91,7 +99,7 @@ def entry(id):
 
     form = RegisterForm()
 
-    sheet = db.session.query(Sheet).filter_by(id=id).first()
+    sheet = db.session.query(Sheet).filter_by(id=id).one()
 
     if not sheet:
         abort(404)
@@ -100,7 +108,7 @@ def entry(id):
         flash("Arket är stängt.")
         return redirect(url_for("main.index"))
 
-    num_rows = db.session.query(Row).filter(Row.sheet_id.is_(sheet.id)).count()
+    num_rows = db.session.query(Row).outerjoin(Sheet.rows).filter(Sheet.id == 1).count()
 
     return render_template("main/entry.html", form=form, sheet=sheet, num_rows=num_rows)
 
