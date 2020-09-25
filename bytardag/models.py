@@ -44,6 +44,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    name = db.Column(db.String(64))
     last_seen = db.Column(db.DateTime, default=pendulum.now)
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"))
     sheets = db.relationship(
@@ -63,6 +64,17 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def can(self, permissions):
+        """Used to check if a user has the given permissions."""
+        return (
+            self.role is not None
+            and (self.role.permissions & permissions) == permissions
+        )
+
+    def is_administrator(self):
+        """Used to check if a user is administrator."""
+        return self.can(Permission.ADMINISTER)
 
     def __repr__(self):
         return "<User {}>".format(self.username)
@@ -91,6 +103,7 @@ class Sheet(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=pendulum.now)
     closed = db.Column(db.DateTime, index=True, default=None)
     signed_at = db.Column(db.DateTime, index=True, default=None)
+    missing_value = db.Column(db.Boolean, default=False)
     owned_by = db.Column(db.Integer(), db.ForeignKey("user.id"))
     signed_by = db.Column(db.Integer(), db.ForeignKey("user.id"))
 

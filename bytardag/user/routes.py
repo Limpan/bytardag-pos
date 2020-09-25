@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import current_app, flash, redirect, render_template, url_for
 
 from . import bp
 from .forms import UserForm
@@ -19,5 +19,14 @@ def list():
 def create():
     form = UserForm()
     if form.validate_on_submit():
-        pass
+        user = User(
+            username=form.username.data,
+            name=form.name.data,
+            password=form.password.data,
+        )
+        db.session.add(user)
+        db.session.commit()
+        current_app.logger.info("Created user {}.".format(user.username))
+        flash("Skapade användare {}".format(user.username))
+        return redirect(url_for("user.list"))
     return render_template("user/create.html", form=form)

@@ -5,5 +5,6 @@ from wtforms.validators import DataRequired, Length
 
 class UserForm(FlaskForm):
     username = StringField("Användarnamn", validators=[DataRequired()])
+    name = StringField("Personnamn", validators=[DataRequired()])
     password = StringField("Lösenord", validators=[DataRequired(), Length(min=8)])
     submit = SubmitField("Skapa")

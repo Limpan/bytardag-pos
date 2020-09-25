@@ -4,6 +4,31 @@ body {
   background-color: #fafafa;
 }
 
+header {
+  margin: 0 2em;
+}
+
+header ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1em;
+  list-style: none;
+  padding-left: 0;
+}
+
+header li {
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+}
+
+header li.spacer {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Raleway', sans-serif;
 }
@@ -17,6 +42,18 @@ h1, h2, h3, h4, h5, h6 {
 .section {
   font-size: 1.6em;
   margin: 1em 1.25em;
+}
+
+#alert {
+  background-color: rgba(224, 174, 18, 0.2);
+  margin: 0;
+  padding: 0 1.25em;
+  border-radius: 0 0 0.625em 0.625em;
+}
+
+#alert div {
+  margin: 0;
+  padding: 1em 0;
 }
 
 form {

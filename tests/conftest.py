@@ -12,6 +12,10 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URI")
 
 
+def pytest_report_header(config):
+    return "database uri: {}".format(TestConfig.SQLALCHEMY_DATABASE_URI)
+
+
 @pytest.fixture(scope="session")
 def app():
     app = create_app(TestConfig)

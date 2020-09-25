@@ -21,8 +21,8 @@ function setupChart() {
                 label: 'Antal ark',
                 data: [0, 0],
                 backgroundColor: [
-                    'rgba(62, 209, 175, 0.5)',
-                    'rgba(224, 174, 18, 0.5)'
+                    'rgba(62, 209, 175, 0.8)',
+                    'rgba(224, 174, 18, 0.8)'
                 ],
                 borderColor: [
                     'rgba(62, 209, 175, 1)',
@@ -35,7 +35,7 @@ function setupChart() {
             aspectRatio: 3/2,
             maintainAspectRatio: true,
             title: {
-                display: true,
+                display: false,
                 text: "Antal ark"
             },
             legend: {

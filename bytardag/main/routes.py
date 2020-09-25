@@ -11,10 +11,11 @@ from flask import (
 )
 from flask_login import current_user, login_required
 import pendulum
-from sqlalchemy import func
+from sqlalchemy import and_, func
 from werkzeug.datastructures import MultiDict
 
 from bytardag import db
+from bytardag.decorators import admin_required
 from bytardag.main import bp
 from bytardag.main.forms import RegisterForm, VerifyForm
 from bytardag.models import Row, Sheet
@@ -79,8 +80,8 @@ def entry(id):
             )
             num_rows = (
                 db.session.query(Row)
-                .outerjoin(Sheet.rows)
-                .filter(Sheet.id == 1)
+                .join(Sheet.rows)
+                .filter(Sheet.id == sheet.id)
                 .count()
             )
             data = {
@@ -95,7 +96,12 @@ def entry(id):
             }
             return jsonify(data)
         current_app.logger.debug("Failed validation. Payload %s" % request.get_json())
-        return jsonify({"status": "error"}), 400
+        messages = [
+            {"field": field.id, "errors": field.errors}
+            for field in [form.seller, form.amount]
+            if field.errors
+        ]
+        return jsonify({"status": "error", "messages": messages}), 400
 
     form = RegisterForm()
 
@@ -108,7 +114,9 @@ def entry(id):
         flash("Arket är stängt.")
         return redirect(url_for("main.index"))
 
-    num_rows = db.session.query(Row).outerjoin(Sheet.rows).filter(Sheet.id == 1).count()
+    num_rows = (
+        db.session.query(Row).join(Sheet.rows).filter(Sheet.id == sheet.id).count()
+    )
 
     return render_template("main/entry.html", form=form, sheet=sheet, num_rows=num_rows)
 
@@ -118,7 +126,14 @@ def entry(id):
 def verify():
     sheets = (
         db.session.query(Sheet)
-        .filter(Sheet.owner != current_user, Sheet.signed_by.is_(None))
+        .filter(
+            and_(
+                Sheet.owner != current_user,
+                Sheet.closed.isnot(None),
+                Sheet.signed_by.is_(None),
+                Sheet.missing_value.isnot(True),
+            )
+        )
         .all()
     )
 
@@ -146,10 +161,17 @@ def verify_entry(id):
 
     if form.validate_on_submit():
         if form.missing.data:
+            sheet.missing_value = True
+            db.session.commit()
+            current_app.logger.warning("Ark #{} saknar kvittorader.".format(id))
+            flash("Ark #{} har markerats för kontroll.".format(id))
+            return redirect(url_for("main.verify"))
+        else:
             sheet.signee = current_user
             sheet.signed_at = pendulum.now()
             db.session.commit()
-            current_app.logger.info("Verifierar ark #{id}.")
+            current_app.logger.info("Verifierar ark #{}.".format(id))
+            flash("Ark #{} har verifierats.".format(id))
             return redirect(url_for("main.verify"))
 
     return render_template("main/verify_sheet.html", form=form, sheet=sheet)
@@ -217,14 +239,22 @@ def seller(id):
     )
 
 
+@bp.route("/missing_value")
+@admin_required
+def missing_value():
+    sheets = db.session.query(Sheet).filter(Sheet.missing_value.is_(True)).all()
+    return render_template("main/missing_value.html", sheets=sheets)
+
+
 @bp.route("/status")
 def status():
     if request.is_json:
-        num_sheets = db.session.query(Sheet).count()
-        num_verified_sheets = db.session.query(Sheet).filter(Sheet.signed_at != None).count()
+        num_sheets = db.session.query(Sheet).filter(Sheet.signed_by.is_(None)).count()
+        num_verified_sheets = (
+            db.session.query(Sheet).filter(Sheet.signed_at.isnot(None)).count()
+        )
 
-        data = {"status": "ok", "values": [14, 3]}
-#        data = {"status": "ok", "values": [num_sheets, num_verified_sheets]}
+        data = {"status": "ok", "values": [num_sheets, num_verified_sheets]}
         return jsonify(data)
 
     return render_template("main/status.html")

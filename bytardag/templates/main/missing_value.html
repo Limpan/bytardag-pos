@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="section">
+        <p>
+            Alla användare
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Senaste login</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sheet in sheets %}
+                <tr>
+                    <td>{{ sheet.id }}</td>
+                    <td>{{ sheet.missing_value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -48,6 +48,7 @@ function submitForm(form, evt) {
     })
     .then(response => response.json())
     .then(data => {
+      if (data.status == 'ok') {
         console.log('Success:', data);
         form.reset();
         seller.focus();
@@ -56,7 +57,20 @@ function submitForm(form, evt) {
         listItem.innerHTML = data.rendered_string;
         history.prepend(listItem);
         numRows.innerText = data.num_rows;
+      } else {
+        console.log('Error', data);
+        let alertDOM = document.getElementById('alert');
         
+        while (alertDOM.firstChild) {
+          alertDOM.removeChild(alertDOM.firstChild);
+        }
+
+        data.messages.forEach(function(msg) {
+          let el = document.createElement('div');
+          el.innerHTML = msg.errors;
+          alertDOM.appendChild(el);
+        });
+      }
     })
     .catch((error) => {
       console.error('Error:', error);

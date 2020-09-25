@@ -11,7 +11,7 @@
                 <li><a href="{{ url_for('main.verify_entry', id=sheet.id) }}">Ark #{{ sheet.id }}</a></li>
             {% endfor %}
         {% else %}
-            <p>Det verkar inte finnas några ark som behöver kontrolleras.</p>        
+            <p>Det verkar inte finnas några ark som du kan kontrollera.</p>
         {% endif %}
     </div>
 {% endblock %}
