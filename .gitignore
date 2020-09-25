@@ -8,4 +8,4 @@ __pycache__
 /.python-version
 /.env
 /*.db
-/app/static/js/autocomplete.js
+/bytardag/static/js/autocomplete.js
