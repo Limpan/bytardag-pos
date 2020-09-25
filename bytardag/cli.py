@@ -44,21 +44,18 @@ def register(app):
         click.echo(f"Added {count} seller IDs to database.")
 
     @sid.command()
-    def refresh():
+    @click.argument("file", type=click.File("w"))
+    def refresh(file):
         """Refresh JS cache for auto-complete."""
         import os
         import json
         from bytardag.models import Seller
         from bytardag import db
 
-        base_dir = os.path.dirname(__file__)
-        file_loc = os.path.join(base_dir, "static/js/autocomplete.js")
-
         sellers = db.session.query(Seller).all()
         data = json.dumps([s.seller_id for s in sellers])
 
-        with open(file_loc, mode="w") as fp:
-            fp.write(
+        file.write(
                 f"/* Auto-complete data, do not edit! */\nexport const sellers = {data};"
             )
         click.echo("Successfully updated auto-complete data.")
