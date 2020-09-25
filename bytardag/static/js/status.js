@@ -16,17 +16,19 @@ function setupChart() {
     chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Registrerade', 'Verifierade'],
+            labels: ['Registrerade', 'Verifierade', 'Felaktiga'],
             datasets: [{
                 label: 'Antal ark',
                 data: [0, 0],
                 backgroundColor: [
                     'rgba(62, 209, 175, 0.8)',
-                    'rgba(224, 174, 18, 0.8)'
+                    'rgba(224, 174, 18, 0.8)',
+                    'rgba(211, 55, 222, 0.8'
                 ],
                 borderColor: [
                     'rgba(62, 209, 175, 1)',
-                    'rgba(224, 174, 18, 1)'
+                    'rgba(224, 174, 18, 1)',
+                    'rgba(211, 55, 222, 1'
                 ],
                 borderWidth: 3
             }]

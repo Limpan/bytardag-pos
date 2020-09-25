@@ -25,8 +25,7 @@ class Role(db.Model):
         """
         roles = {
             "Volunteer": (Permission.REGISTER_SHEETS, True),
-            "Treasurer": (Permission.REGISTER_SHEETS |
-                          Permission.TREAUSURER, False),
+            "Treasurer": (Permission.REGISTER_SHEETS | Permission.TREASURER, False),
             "Administrator": (0xFF, False),
         }
 

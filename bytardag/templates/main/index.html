@@ -17,5 +17,12 @@
         <p>
             Du kan också hjälpa till och <a href="{{ url_for('main.verify') }}">kontrollera inmatade ark</a>.
         </p>
+
+        {% if current_user.is_administrator() %}
+        <p>
+            Kontrollera de <a href="{{ url_for("main.missing_value") }}">felaktiga arken</a>.
+        </p>
+        {% endif %}
+
     </div>
 {% endblock %}

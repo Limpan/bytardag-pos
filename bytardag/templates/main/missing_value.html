@@ -9,15 +9,15 @@
         <table>
             <thead>
                 <tr>
-                    <th>Namn</th>
-                    <th>Senaste login</th>
+                    <th>Ark</th>
+                    <th>Skapat av</th>
                 </tr>
             </thead>
             <tbody>
                 {% for sheet in sheets %}
                 <tr>
                     <td>{{ sheet.id }}</td>
-                    <td>{{ sheet.missing_value }}</td>
+                    <td>{{ sheet.owner.name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

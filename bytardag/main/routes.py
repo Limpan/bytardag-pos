@@ -253,8 +253,14 @@ def status():
         num_verified_sheets = (
             db.session.query(Sheet).filter(Sheet.signed_at.isnot(None)).count()
         )
+        num_error_sheets = (
+            db.session.query(Sheet).filter(Sheet.missing_value.is_(True)).count()
+        )
 
-        data = {"status": "ok", "values": [num_sheets, num_verified_sheets]}
+        data = {
+            "status": "ok",
+            "values": [num_sheets, num_verified_sheets, num_error_sheets],
+        }
         return jsonify(data)
 
     return render_template("main/status.html")
