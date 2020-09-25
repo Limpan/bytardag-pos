@@ -58,3 +58,4 @@ def register(app):
         file.write(
                 f"/* Auto-complete data, do not edit! */\nexport const sellers = {data};"
             )
+        click.echo("Successfully updated auto-complete data.")
