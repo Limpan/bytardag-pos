@@ -39,4 +39,5 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 COPY . .
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["gunicorn", "-w 4", "-b :8000", "wsgi:app"]
