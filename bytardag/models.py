@@ -7,6 +7,7 @@ from bytardag import db, login
 
 class Permission:
     REGISTER_SHEETS = 0x01
+    TREASURER = 0x02
     ADMINISTER = 0x80
 
 
@@ -24,6 +25,8 @@ class Role(db.Model):
         """
         roles = {
             "Volunteer": (Permission.REGISTER_SHEETS, True),
+            "Treasurer": (Permission.REGISTER_SHEETS |
+                          Permission.TREAUSURER, False),
             "Administrator": (0xFF, False),
         }
 

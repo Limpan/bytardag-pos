@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="section">
     <h1>Säljare {{ seller_id }}</h1>
     <p>
-        Att betala till säljare: {{ (stats[0] * 0.75)|round(2) }} kr<br>
+        Att betala till säljare: {{ (stats[0] * 0.75)|round(2) }} kr
+    </p>
+    <p class="grey">
         Total summa kvitton: {{ stats[0] }} kr<br>
     </p>
     <table class="cr1 cr2 cc3">
@@ -24,5 +27,5 @@
             {% endfor %}
         </tbody>
     </table>
-
+</div>
 {% endblock %}

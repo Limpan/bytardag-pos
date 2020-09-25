@@ -167,6 +167,10 @@ button#close {
   border-bottom: 3px solid #3f59e8;
 }
 
+.grey {
+  color: rgba(50, 50, 50, 0.6);
+}
+
 .row {
   padding: 0.25em;
   background-color: rgba(50, 50, 50, 0.15);
