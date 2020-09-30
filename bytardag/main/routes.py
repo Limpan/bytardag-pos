@@ -15,10 +15,10 @@ from sqlalchemy import and_, func
 from werkzeug.datastructures import MultiDict
 
 from bytardag import db
-from bytardag.decorators import admin_required
+from bytardag.decorators import admin_required, permission_required
 from bytardag.main import bp
 from bytardag.main.forms import RegisterForm, VerifyForm
-from bytardag.models import Row, Sheet
+from bytardag.models import Permission, Row, Sheet
 
 
 @bp.before_app_request
@@ -222,6 +222,7 @@ def sheets():
 
 @bp.route("/seller")
 @login_required
+@permission_required(Permission.VIEW_RESULTS)
 def list_sellers():
     sellers = db.session.query(Row.seller).distinct().order_by(Row.seller.asc()).all()
 
@@ -230,6 +231,7 @@ def list_sellers():
 
 @bp.route("/seller/<id>")
 @login_required
+@permission_required(Permission.VIEW_RESULTS)
 def seller(id):
     rows = db.session.query(Row).filter_by(seller=id.upper()).all()
     stats = db.session.query(func.sum(Row.amount)).filter_by(seller=id.upper()).one()

@@ -24,5 +24,11 @@
         </p>
         {% endif %}
 
+        {% if current_user|has_permission('VIEW_RESULTS') %}
+        <p>
+            Se resultatet för alla säljare <a href="{{ url_for("main.list_sellers") }}">här</a>.
+        </p>
+        {% endif %}
+
     </div>
 {% endblock %}

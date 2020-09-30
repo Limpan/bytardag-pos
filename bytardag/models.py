@@ -1,4 +1,4 @@
-from flask_login import UserMixin
+from flask_login import AnonymousUserMixin, UserMixin
 import pendulum
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -7,7 +7,7 @@ from bytardag import db, login
 
 class Permission:
     REGISTER_SHEETS = 0x01
-    TREASURER = 0x02
+    VIEW_RESULTS = 0x02
     ADMINISTER = 0x80
 
 
@@ -25,7 +25,7 @@ class Role(db.Model):
         """
         roles = {
             "Volunteer": (Permission.REGISTER_SHEETS, True),
-            "Treasurer": (Permission.REGISTER_SHEETS | Permission.TREASURER, False),
+            "Treasurer": (Permission.REGISTER_SHEETS | Permission.VIEW_RESULTS, False),
             "Administrator": (0xFF, False),
         }
 
@@ -85,6 +85,14 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+class MyAnonymousUser(AnonymousUserMixin):
+    def can(self, permission):
+        return False
+
+
+login.anonymous_user = MyAnonymousUser
 
 
 class Row(db.Model):

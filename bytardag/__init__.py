@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
+
 __version__ = "0.1.0"
 
 db = SQLAlchemy()
@@ -34,6 +35,11 @@ def create_app(config=Config):
     login.init_app(app)
     moment.init_app(app)
 
+    from bytardag.filters import Filters
+
+    filters = Filters()
+    filters.init_app(app)
+
     from bytardag.main import bp as main_bp
 
     app.register_blueprint(main_bp)
@@ -58,4 +64,4 @@ def create_app(config=Config):
     return app
 
 
-from bytardag import models  # noqa: E402, F401, I100
+from bytardag import models  # noqa: E402, F401, I100, I202
